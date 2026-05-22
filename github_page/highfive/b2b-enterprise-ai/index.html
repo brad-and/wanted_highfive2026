@@ -17,7 +17,18 @@
     html{scroll-behavior:smooth;}
     body{background:var(--bg-base);color:var(--text-primary);font-family:'Noto Sans KR','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
     .container{max-width:1100px;margin:0 auto;padding:0 32px;}
-    nav{position:sticky;top:0;z-index:100;background:rgba(18,18,18,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content: flex-start; gap: 8px;}
+    nav.top-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(18,18,18,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 32px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    nav.top-nav .nav-back { font-size:13px; color:var(--text-secondary); text-decoration:none; transition:color .2s; flex-shrink:0; }
+    nav.top-nav .nav-back:hover { color:#fff; }
+    nav.top-nav .nav-sep { color:#3a3a3a; font-size:16px; }
+    nav.top-nav .nav-current { font-size:13px; color:var(--text-secondary); }
     .nav-brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--text-secondary);letter-spacing:0.05em;text-transform:uppercase;}
     .nav-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;}
     .nav-pill{background:var(--bg-elevated);color:var(--text-secondary);font-size:12px;font-weight:600;padding:5px 14px;border-radius:var(--radius-pill);letter-spacing:0.08em;text-transform:uppercase;}
@@ -164,12 +175,12 @@ nav { position:sticky; top:0; z-index:100; background:rgba(18,18,18,0.95); backd
 </head>
 <body>
 
-<nav>
-  <a href="../../index.html" class="nav-back">← 아카이브</a>
+<nav class="top-nav">
+  <a href="../../main_index.html" class="nav-back">← 컨퍼런스 목록</a>
   <span class="nav-sep">/</span>
-  <a href="../index.html" class="nav-back">원티드 하이파이브</a>
+  <a href="../index.html" class="nav-back">Wanted High Five 2026</a>
   <span class="nav-sep">/</span>
-  <span class="nav-current">B2B Enterprise AI 제품을 만들며 겪은 성공과 실패</span>
+  <span class="nav-current">B2B Enterprise AI 서비스 도입 전략</span>
 </nav>
 
 <div class="container">

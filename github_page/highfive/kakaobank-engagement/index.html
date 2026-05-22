@@ -24,7 +24,18 @@
     .nav-back:hover { color: var(--text-primary); }
     .nav-sep { color: #3a3a3a; font-size: 14px; margin: 0 4px; }
     .nav-current { font-size: 13px; color: var(--text-secondary); }
-    nav{position:sticky;top:0;z-index:100;background:rgba(18,18,18,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content: flex-start; gap: 8px;}
+    nav.top-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(18,18,18,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 32px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    nav.top-nav .nav-back { font-size:13px; color:var(--text-secondary); text-decoration:none; transition:color .2s; flex-shrink:0; }
+    nav.top-nav .nav-back:hover { color:#fff; }
+    nav.top-nav .nav-sep { color:#3a3a3a; font-size:16px; }
+    nav.top-nav .nav-current { font-size:13px; color:var(--text-secondary); }
     .nav-brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--text-secondary);letter-spacing:0.05em;text-transform:uppercase;}
     .nav-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;}
     .nav-pill{background:var(--bg-elevated);color:var(--text-secondary);font-size:12px;font-weight:600;padding:5px 14px;border-radius:var(--radius-pill);letter-spacing:0.08em;text-transform:uppercase;}
@@ -178,12 +189,12 @@
 <body>
 
 <!-- NAV -->
-<nav>
-  <a href="../../index.html" class="nav-back">← 아카이브</a>
+<nav class="top-nav">
+  <a href="../../main_index.html" class="nav-back">← 컨퍼런스 목록</a>
   <span class="nav-sep">/</span>
-  <a href="../index.html" class="nav-back">원티드 하이파이브</a>
+  <a href="../index.html" class="nav-back">Wanted High Five 2026</a>
   <span class="nav-sep">/</span>
-  <span class="nav-current">카카오뱅크가 고객 방문과 체류시간을 높이는 방법 · High Five 2</span>
+  <span class="nav-current">카카오뱅크 고객 인게이지먼트 전략</span>
 </nav>
 
 <!-- HERO -->
