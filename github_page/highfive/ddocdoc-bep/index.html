@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>똑닥, BEP를 넘기다 — Wanted High Five 2026</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap');
+    :root {
+      --bg-base:#121212; --bg-surface:#181818; --bg-elevated:#1f1f1f; --bg-card:#252525;
+      --green:#1ed760; --green-dim:#1db954; --text-primary:#ffffff; --text-secondary:#b3b3b3;
+      --text-muted:#6a6a6a; --border:#2a2a2a; --red:#f3727f; --orange:#ffa42b; --blue:#539df5;
+      --shadow-card:rgba(0,0,0,0.5) 0px 8px 24px; --shadow-sm:rgba(0,0,0,0.3) 0px 4px 8px;
+      --radius:8px; --radius-pill:9999px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg-base);color:var(--text-primary);font-family:'Noto Sans KR','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+    .container{max-width:1100px;margin:0 auto;padding:0 32px;}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:100;background:rgba(18,18,18,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--text-secondary);letter-spacing:0.05em;text-transform:uppercase;}
+    .nav-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+    .nav-pill{background:var(--bg-elevated);color:var(--text-secondary);font-size:12px;font-weight:600;padding:5px 14px;border-radius:var(--radius-pill);letter-spacing:0.08em;text-transform:uppercase;}
+
+    /* HERO */
+    .hero{position:relative;padding:100px 0 80px;border-bottom:1px solid var(--border);overflow:hidden;min-height:480px;background:#121212;}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%, rgba(30,215,96,0.08) 0%, transparent 70%),radial-gradient(ellipse 50% 40% at 20% 80%, rgba(83,157,245,0.05) 0%, transparent 60%);pointer-events:none;}
+    .hero-label{font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:20px;}
+    .hero-title{font-size:clamp(28px,5vw,52px);font-weight:700;line-height:1.15;margin-bottom:28px;letter-spacing:-0.02em;}
+    .hero-title span{color:var(--green);}
+    .hero-meta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+    .badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 14px;border-radius:var(--radius-pill);}
+    .badge-green{background:var(--green);color:#000;}
+    .badge-outline{background:transparent;border:1px solid var(--border);color:var(--text-secondary);}
+    .hero-quote{margin-top:48px;padding:28px 32px;background:var(--bg-surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius);font-size:15px;color:var(--text-secondary);font-style:italic;line-height:1.7;max-width:680px;}
+
+    /* STATS STRIP */
+    .stats-strip{padding:40px 0;border-bottom:1px solid var(--border);background:var(--bg-surface);}
+    .stats-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0;}
+    .stat-item{padding:24px 20px;text-align:center;border-right:1px solid var(--border);}
+    .stat-item:last-child{border-right:none;}
+    .stat-num{font-size:clamp(20px,3vw,32px);font-weight:700;color:var(--green);letter-spacing:-0.02em;line-height:1.1;}
+    .stat-num.red{color:var(--red);}
+    .stat-num.orange{color:var(--orange);}
+    .stat-label{font-size:11px;color:var(--text-muted);margin-top:6px;font-weight:600;letter-spacing:0.05em;}
+
+    /* SECTIONS */
+    section{padding:80px 0;border-bottom:1px solid var(--border);}
+    .section-label{font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:12px;}
+    .section-title{font-size:24px;font-weight:700;margin-bottom:8px;}
+    .section-desc{color:var(--text-secondary);font-size:14px;margin-bottom:40px;max-width:640px;}
+
+    /* TIMELINE */
+    .timeline{position:relative;padding-left:32px;}
+    .timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border);}
+    .tl-item{position:relative;margin-bottom:40px;}
+    .tl-item:last-child{margin-bottom:0;}
+    .tl-dot{position:absolute;left:-28px;top:4px;width:16px;height:16px;border-radius:50%;background:var(--bg-elevated);border:2px solid var(--border);transition:all .2s;}
+    .tl-dot.active{background:var(--green);border-color:var(--green);box-shadow:0 0 0 4px rgba(30,215,96,0.15);}
+    .tl-date{font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
+    .tl-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+    .tl-body{font-size:13px;color:var(--text-secondary);line-height:1.7;}
+
+    /* CARDS GRID */
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;}
+    .card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;transition:background .2s,transform .2s,box-shadow .2s;cursor:default;}
+    .card:hover{background:var(--bg-card);transform:translateY(-2px);box-shadow:var(--shadow-card);}
+    .card-num{font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
+    .card-title{font-size:16px;font-weight:700;margin-bottom:10px;}
+    .card-body{font-size:13px;color:var(--text-secondary);line-height:1.7;}
+    .card-tag{display:inline-block;margin-top:14px;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border-radius:var(--radius-pill);}
+    .tag-green{background:rgba(30,215,96,0.12);color:var(--green);}
+    .tag-red{background:rgba(243,114,127,0.12);color:var(--red);}
+    .tag-orange{background:rgba(255,164,43,0.12);color:var(--orange);}
+    .tag-blue{background:rgba(83,157,245,0.12);color:var(--blue);}
+
+    /* HIGHLIGHT BOX */
+    .highlight-box{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px 36px;margin-bottom:24px;}
+    .highlight-box.accent{border-color:rgba(30,215,96,0.3);background:rgba(30,215,96,0.04);}
+    .highlight-box.danger{border-color:rgba(243,114,127,0.3);background:rgba(243,114,127,0.04);}
+
+    /* TWO COL */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+
+    /* RESULT */
+    .result-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px;}
+    .result-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;}
+    .result-card .before{font-size:13px;color:var(--red);text-decoration:line-through;margin-bottom:6px;}
+    .result-card .arrow{font-size:20px;color:var(--text-muted);margin-bottom:6px;}
+    .result-card .after{font-size:28px;font-weight:700;color:var(--green);line-height:1.1;}
+    .result-card .label{font-size:12px;color:var(--text-muted);margin-top:8px;font-weight:600;}
+
+    /* INSIGHT GRID */
+    .insight-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+    .insight-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;}
+    .insight-num{font-size:36px;font-weight:700;color:rgba(30,215,96,0.15);line-height:1;margin-bottom:12px;}
+    .insight-title{font-size:15px;font-weight:700;margin-bottom:8px;}
+    .insight-body{font-size:13px;color:var(--text-secondary);line-height:1.65;}
+
+    /* QUOTE */
+    .quote-block{position:relative;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:36px 40px 28px;}
+    .quote-block::before{content:'"';position:absolute;top:-16px;left:32px;font-size:80px;color:var(--green);line-height:1;font-family:Georgia,serif;opacity:0.5;}
+    .quote-text{font-size:16px;line-height:1.75;color:var(--text-primary);margin-bottom:16px;}
+    .quote-author{font-size:12px;color:var(--text-muted);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+
+    /* FOOTER */
+    footer{padding:48px 32px;text-align:center;background:var(--bg-surface);border-top:1px solid var(--border);}
+    .footer-brand{font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;}
+    .footer-session{font-size:18px;font-weight:700;color:var(--text-secondary);margin-bottom:4px;}
+    .footer-sub{font-size:12px;color:var(--text-muted);}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .container{padding:0 20px;}
+      nav{padding:12px 20px;}
+      .hero{padding:72px 0 56px;}
+      .stats-grid{grid-template-columns:repeat(3,1fr);}
+      .stat-item:nth-child(3){border-right:none;}
+      .stat-item:nth-child(4){border-right:1px solid var(--border);}
+      .two-col{grid-template-columns:1fr;}
+      .result-strip{grid-template-columns:1fr 1fr;}
+      section{padding:56px 0;}
+    }
+    @media(max-width:480px){
+      .stats-grid{grid-template-columns:repeat(2,1fr);}
+      .stat-item:nth-child(2){border-right:none;}
+      .stat-item:nth-child(4){border-right:none;}
+      .result-strip{grid-template-columns:1fr;}
+    }
+  
+nav { position:sticky; top:0; z-index:100; background:rgba(18,18,18,0.95); backdrop-filter:blur(12px); border-bottom:1px solid #2a2a2a; padding:14px 32px; display:flex; align-items:center; gap:8px; }
+.nav-back { font-size:13px; color:#b3b3b3; text-decoration:none; transition:color .2s; }
+.nav-back:hover { color:#fff; }
+.nav-sep { color:#3a3a3a; font-size:14px; }
+.nav-current { font-size:13px; color:#b3b3b3; }
+.nav-pill { font-size:11px; background:#252525; color:#b3b3b3; border:1px solid #2a2a2a; border-radius:9999px; padding:3px 10px; margin-left:auto; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="../../index.html" class="nav-back">← 아카이브</a>
+  <span class="nav-sep">/</span>
+  <a href="../index.html" class="nav-back">원티드 하이파이브</a>
+  <span class="nav-sep">/</span>
+  <span class="nav-current">똑닥, BEP를 넘기다</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-label">세션 아카이브 · 스타트업 생존 전략</div>
+    <h1 class="hero-title">똑닥,<br><span>BEP를 넘기다</span></h1>
+    <div class="hero-meta">
+      <span class="badge badge-green">김영석</span>
+      <span class="badge badge-outline">비브로스 / 똑닥</span>
+      <span class="badge badge-outline">Growth · Monetization</span>
+      <span class="badge badge-outline">월 -7억 → 연 +18억</span>
+    </div>
+    <div class="hero-quote">
+      "좋은 서비스를 만들면 알아서 사업이 굴러가고 수익이 들어온다고 생각하는데, 절대 그렇지 않습니다. 팔 사람을 처음부터 데려와야 해요."
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num red">-7억</div>
+        <div class="stat-label">시작 당시 월 손실</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num red">-84억</div>
+        <div class="stat-label">연간 적자 규모</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num orange">450억</div>
+        <div class="stat-label">누적 투자 유치</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">500곳</div>
+        <div class="stat-label">병원 직접 방문</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3개월</div>
+        <div class="stat-label">유료 전환 50만명</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">+18억</div>
+        <div class="stat-label">2024 영업이익</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 배경 / 위기 -->
+<section>
+  <div class="container">
+    <div class="section-label">배경</div>
+    <h2 class="section-title">2022년 10월, 회사가 무너지고 있었다</h2>
+    <p class="section-desc">한 달에 7억씩 사라지는 돈. 추가 투자는 없다. 대주주가 마지막으로 100억을 쥐어줬다. 실질적으로 남은 시간은 12개월.</p>
+
+    <div class="two-col">
+      <div class="highlight-box danger">
+        <div class="section-label" style="color:var(--red)">위기 현황</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:8px;">
+          <li style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="color:var(--red);font-weight:700;flex-shrink:0;">✗</span>
+            <span style="font-size:14px;color:var(--text-secondary);">월 <strong style="color:var(--text-primary);">7억원 적자</strong> — 연간 84억 손실 중</span>
+          </li>
+          <li style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="color:var(--red);font-weight:700;flex-shrink:0;">✗</span>
+            <span style="font-size:14px;color:var(--text-secondary);">추가 투자 <strong style="color:var(--text-primary);">완전 차단</strong> — 금리 5%, 레고랜드 사태 직후</span>
+          </li>
+          <li style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="color:var(--red);font-weight:700;flex-shrink:0;">✗</span>
+            <span style="font-size:14px;color:var(--text-secondary);">창업자 부재 — 개인 사정으로 송성범 대표 퇴사</span>
+          </li>
+          <li style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="color:var(--red);font-weight:700;flex-shrink:0;">✗</span>
+            <span style="font-size:14px;color:var(--text-secondary);">8년간 <strong style="color:var(--text-primary);">사실상 매출 0</strong> — 무료 서비스 고착화</span>
+          </li>
+          <li style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="color:var(--red);font-weight:700;flex-shrink:0;">✗</span>
+            <span style="font-size:14px;color:var(--text-secondary);">런웨이 <strong style="color:var(--text-primary);">18개월</strong> — 회사 정리에만 6개월 필요, 실질 12개월</span>
+          </li>
+        </ul>
+      </div>
+      <div class="highlight-box">
+        <div class="section-label">서비스 현황</div>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.75;margin-top:8px;">
+          <strong style="color:var(--text-primary);">똑닥</strong>은 병원 모바일 접수·예약 서비스. 집에서 대기번호를 받아두고 차례가 다 됐을 때 병원으로 가는 구조.
+          <br><br>
+          <strong style="color:var(--text-primary);">주 사용자</strong>: 어린 자녀를 둔 3040 여성. "쿠팡과 똑닥 중 하나만 남겨야 한다면?"이라는 질문에 버텨볼 수 있을 정도의 앱.
+          <br><br>
+          MAU <strong style="color:var(--text-primary);">70~80만</strong> / 접수·예약 이용자 <strong style="color:var(--text-primary);">150만</strong> / 체류시간 <strong style="color:var(--text-primary);">하루 5분</strong> (접수 후 이탈)
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section>
+  <div class="container">
+    <div class="section-label">반등 타임라인</div>
+    <h2 class="section-title">12개월의 역전</h2>
+    <p class="section-desc">위기 인지부터 BEP 돌파까지 — 주요 의사결정 흐름</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-date">2022년 10월</div>
+        <div class="tl-title">위기 선언 & 상황 전면 공개</div>
+        <div class="tl-body">입사 4개월 차 김영석이 구성원 62명에게 회사 위기를 있는 그대로 공유. "대안이 있어서 공유하는 게 아니라, 같이 만들려고 공유한다."</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-date">2022년 12월</div>
+        <div class="tl-title">전원 투표 — 구조조정 없이 1년 집중</div>
+        <div class="tl-body">옵션 A: 30% 구조조정 후 런웨이 6개월 연장 / 옵션 B: 구조조정 없이 1년 집중, 실패 시 70% 동시 퇴장. → 압도적 지지로 옵션 B 선택.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-date">2023년 1월</div>
+        <div class="tl-title">유료 멤버십 결정 — 15명 중 13명 반대 돌파</div>
+        <div class="tl-body">광고(확률 3%), 커머스(1%)를 버리고 유료화(30%)를 선택. "확률이 가장 높은 것을 하는 게 맞다." 반대 이유 "아픈 아이 데리고 병원 가는 엄마한테 돈을 뜯느냐"를 논리로 설득.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-date">2023년 1~4월</div>
+        <div class="tl-title">병원 확장 집중 + 가격 확정</div>
+        <div class="tl-body">월 1,000원 / 연 10,000원 확정. 유저 리서치 없이 직관으로 결정. "기분 나쁜 상태에서 얼마를 받아야 '아 그 정도면 낼 수 있지'라는 반응을 얻을까."</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-date">2023년 4~7월</div>
+        <div class="tl-title">병원 500곳 직접 방문 + 유저 FGI</div>
+        <div class="tl-body">영업팀 4명이 3개월간 500군데 병원 원장님께 직접 찾아가 유료화 설명. 동시에 유저 10명씩 소규모 그룹 인터뷰로 마케팅 메시지 정련.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-date">2023년 8월 2일</div>
+        <div class="tl-title">멤버십 공식 런칭 (1개월 무료 체험)</div>
+        <div class="tl-body">오피스 입구에 뜯는 달력 설치. 런칭 당일부터 MBC, KBS 등 뉴스에 오르며 논란. 모든 댓글과 반응 하나하나 직접 대응.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-date">2023년 10월 2일</div>
+        <div class="tl-title">첫 결제 발생 — 50만명 돌파</div>
+        <div class="tl-body">런칭 3개월 만에 유료 구독자 50만명 돌파. 목표치 달성 축하 후 김영석 대표 퇴장 선언. "성공시켜놓고 나가는 게 맞다고 생각했다."</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-date">2024년</div>
+        <div class="tl-title">BEP 돌파 — 매출 100억, 영업이익 +18억</div>
+        <div class="tl-body">유료 구독자 90만명 돌파, 100만명 근접. 월 -7억이었던 회사가 연간 +18억 영업이익 시현. 1년 공백 후 복귀한 김영석이 현재도 재직 중.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10가지 선택 -->
+<section>
+  <div class="container">
+    <div class="section-label">의사결정</div>
+    <h2 class="section-title">BEP를 만든 10가지 선택의 순간</h2>
+    <p class="section-desc">결정적 순간마다 반대와 두려움이 있었다. 그 순간을 어떻게 통과했는가.</p>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-num">01</div>
+        <div class="card-title">상황을 있는 그대로 공개했다</div>
+        <div class="card-body">입사 4개월, 대안도 없는 상태에서 구성원 62명에게 회사 위기를 전면 공개. "구성원 입장에서 알고 싶을 것이고, 각자 상황에 맞는 결정을 내릴 권리가 있다."</div>
+        <span class="card-tag tag-blue">투명성 · 신뢰</span>
+      </div>
+
+      <div class="card">
+        <div class="card-num">02</div>
+        <div class="card-title">구조조정 없이 1년을 걸었다</div>
+        <div class="card-body">다니엘 카너먼의 '생각에 관한 생각'을 차용. 30%를 확정 손실로 자르느냐, 전원이 성공의 기회를 갖느냐 — 압도적 지지로 후자 선택. 단 한 명의 구조조정 없이 12개월 스타트.</div>
+        <span class="card-tag tag-green">조직 문화 · 선택</span>
+      </div>
+
+      <div class="card">
+        <div class="card-num">03</div>
+        <div class="card-title">광고·커머스를 버리고 유료화를 택했다</div>
+        <div class="card-body">광고 성공률 3%, 커머스 1%, 유료화 30%. "절대적으로 높은 확률이 아니어도, 그 순간 가장 높은 것을 선택하는 게 맞다." 15명 중 13명의 반대를 뚫었다.</div>
+        <span class="card-tag tag-orange">전략 · 확률적 사고</span>
+      </div>
+
+      <div class="card">
+        <div class="card-num">04</div>
+        <div class="card-title">가격을 유저 리서치 없이 직관으로 정했다</div>
+        <div class="card-body">월 1,000원 / 연 10,000원. "기분이 나쁜 상태에서 얼마가 됐든 기분은 나쁘다. 그래도 얼마를 들었을 때 '그 정도면 낼 수 있지'라는 반응을 얻어야 한다." 유저 리서치는 시간 낭비.</div>
+        <span class="card-tag tag-orange">가격 결정 · 직관</span>
+      </div>
+
+      <div class="card">
+        <div class="card-num">05</div>
+        <div class="card-title">병원 500곳을 직접 찾아갔다</div>
+        <div class="card-body">영업팀 4명이 3개월간 500군데 병원을 발로 뛰었다. "안 좋은 얘기를 전달할 때 진정성밖에 없다. 이메일이나 뉴스로 들으면 기분이 나쁘지만, 직접 찾아오면 다르다."</div>
+        <span class="card-tag tag-green">영업 · 실행력</span>
+      </div>
+
+      <div class="card">
+        <div class="card-num">06</div>
+        <div class="card-title">유저와 직접 대화했다 (FGI)</div>
+        <div class="card-body">유저 300만명을 대상으로 서베이를 쏘는 대신, 10명씩 소규모 그룹으로 불러 직접 상황 설명 후 반응을 들었다. 그 언어로 마케팅 메시지를 만들었다.</div>
+        <span class="card-tag tag-blue">유저 리서치 · 공감</span>
+      </div>
+
+      <div class="card">
+        <div class="card-num">07</div>
+        <div class="card-title">카운트다운 달력을 오피스 입구에 걸었다</div>
+        <div class="card-body">매일 출근하면 달력 한 장을 뜯는다. 숫자가 줄어드는 것을 보는 것만으로도 다른 동기부여가 필요 없었다. "유치하다고? 그게 매일 듣는 것보다 훨씬 낫다."</div>
+        <span class="card-tag tag-green">팀 문화 · 긴박감</span>
+      </div>
+
+      <div class="card">
+        <div class="card-num">08</div>
+        <div class="card-title">일 방식은 각자에게 맡겼다</div>
+        <div class="card-body">목표와 할 일이 명확하면 어디서, 어떻게, 얼마나 할지는 각자 결정. 식비는 15,000원으로 올렸다. "돈이 없을 때 작은 돈 아끼려 하지 마라. 인건비가 제일 크다."</div>
+        <span class="card-tag tag-blue">자율성 · 복지</span>
+      </div>
+
+      <div class="card">
+        <div class="card-num">09</div>
+        <div class="card-title">대시보드로 유료 구독자 수를 실시간 공유했다</div>
+        <div class="card-body">전 구성원이 실시간으로 구독자 수를 볼 수 있었다. 10만, 15만, 30만… 달력과 연동해 마일스톤마다 함께 축하. 숫자가 팀을 움직였다.</div>
+        <span class="card-tag tag-green">정보 공유 · 동기부여</span>
+      </div>
+
+      <div class="card">
+        <div class="card-num">10</div>
+        <div class="card-title">50만명을 달성하자 바로 떠났다</div>
+        <div class="card-body">목표 달성 직후 전원 앞에서 퇴장 선언. "성공시켜놓고 나가는 게 맞다고 생각했다." 1년 후 복귀 요청에 응해 현재까지 재직 중. 회사는 계속 성장.</div>
+        <span class="card-tag tag-orange">리더십 · 타이밍</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 핵심 인사이트 -->
+<section>
+  <div class="container">
+    <div class="section-label">핵심 프레임</div>
+    <h2 class="section-title">이 경험에서 건진 원칙들</h2>
+    <p class="section-desc">스타트업 어디서나 쓸 수 있는, 실전에서 검증된 생각의 틀.</p>
+
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="insight-num">01</div>
+        <div class="insight-title">위기는 숨길수록 커진다</div>
+        <div class="insight-body">리더들이 숨기려 해도 구성원은 이미 짐작하고 있다. 투명하게 공유할수록 오히려 신뢰가 생기고, 구성원이 스스로 판단할 수 있는 정보를 준다.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num">02</div>
+        <div class="insight-title">절대 확률이 아닌 상대 확률로 선택하라</div>
+        <div class="insight-body">성공 확률 30%짜리라도, 다른 옵션이 3%와 1%라면 그게 정답이다. "가장 확률이 높은 것을 선택했는데 실패했다"와 "다른 걸 선택했는데 실패했다"는 전혀 다른 이야기다.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num">03</div>
+        <div class="insight-title">가격은 유저에게 물어보지 마라</div>
+        <div class="insight-body">말하는 금액과 실제로 내는 금액은 다르다. 카카오 이모티콘 플러스도, 카카오톡 채널도 "내겠다"고 한 사람들이 실제로 내지 않았다. 직관과 시뮬레이션으로 결정하라.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num">04</div>
+        <div class="insight-title">팔 사람을 처음부터 데려와라</div>
+        <div class="insight-body">만들고 나서 영업·세일즈 조직을 붙이는 건 이미 늦다. 제품 개발 단계부터 영업 담당자가 시장을 다니며 피드백을 넣어줘야 팔 수 있는 제품이 나온다.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num">05</div>
+        <div class="insight-title">작은 돈 아끼지 마라</div>
+        <div class="insight-body">식비 5,000원 올리는 게 사업에 미치는 영향은 0에 가깝다. 하지만 팀 사기에 미치는 영향은 크다. 위기일수록 진짜 비용(인건비)에만 집중하라.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-num">06</div>
+        <div class="insight-title">급할수록 심호흡하라</div>
+        <div class="insight-body">"급하다고 아무거나 하다 보면 수렁에 더 빠진다." 빠르게 행동해야 할 때와 생각해야 할 때를 구분하는 것이 위기 리더십의 핵심이다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 결과 -->
+<section>
+  <div class="container">
+    <div class="section-label">결과</div>
+    <h2 class="section-title">숫자로 보는 반등</h2>
+    <p class="section-desc">월 7억원이 사라지던 회사가 18개월 만에 흑자 전환.</p>
+
+    <div class="result-strip">
+      <div class="result-card">
+        <div class="before">월 -7억원</div>
+        <div class="arrow">↓</div>
+        <div class="after">+18억</div>
+        <div class="label">연간 영업이익 (2024)</div>
+      </div>
+      <div class="result-card">
+        <div class="before">매출 ≈ 0</div>
+        <div class="arrow">↓</div>
+        <div class="after">100억+</div>
+        <div class="label">연간 매출 (2024)</div>
+      </div>
+      <div class="result-card">
+        <div class="before">유료 구독자 0명</div>
+        <div class="arrow">↓</div>
+        <div class="after">100만명</div>
+        <div class="label">유료 구독자 (현재 근접)</div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;">
+      <div class="quote-block">
+        <p class="quote-text">마이너스 84억을 플러스 18억으로 만드는 것은 1년 동안 플러스 100억원을 만드는 것과 같습니다. 그 순간순간마다 어떤 일이 있었고 어떤 것들이 벌어졌는지 — 그걸 글로 적었습니다.</p>
+        <div class="quote-author">김영석 · 비브로스 · 저서 「비밀의 승리」 (2025년 5월 2일 출간)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Q&A 인사이트 -->
+<section>
+  <div class="container">
+    <div class="section-label">Q&A 핵심 발췌</div>
+    <h2 class="section-title">질문에서 나온 이야기들</h2>
+    <p class="section-desc">청중 질문에 대한 답변에서 건진 실전 조언.</p>
+
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div class="highlight-box">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px;">Q. 감정 압박과 일을 어떻게 분리하나요?</div>
+        <div style="font-size:14px;color:var(--text-secondary);line-height:1.75;">새벽 3~4시에 자주 깨어났다. 예쁘게 말을 못해서 상처를 준 구성원들이 많았다. 하지만 그건 프로젝트를 성공시키려는 과정에서 감당해야 하는 부분이다. <strong style="color:var(--text-primary);">회사에 마음 터놓고 얘기할 수 있는 사람 세 명만 있으면 어떻게든 된다.</strong> 그런 사람을 꼭 찾아두길 권한다.</div>
+      </div>
+      <div class="highlight-box">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px;">Q. 반대하는 팀원들을 어떻게 설득했나요?</div>
+        <div style="font-size:14px;color:var(--text-secondary);line-height:1.75;">화를 내지 않는 것이 첫째. 그 다음은 <strong style="color:var(--text-primary);">"그러면 너는 뭘 하고 싶은데?"</strong>를 계속 물어보는 것. 자기 발휘를 해본 사람은 다른 사람 발휘에 반대하기 어려워진다. 논리적 설득은 그 다음이다.</div>
+      </div>
+      <div class="highlight-box">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px;">Q. 초기 스타트업 창업자에게 해줄 말이 있다면?</div>
+        <div style="font-size:14px;color:var(--text-secondary);line-height:1.75;"><strong style="color:var(--text-primary);">제품을 만들고 나서 팔려는 생각을 버려라.</strong> 처음부터 팔 사람을 데려와야 한다. 그 사람이 현장을 다니면서 제품에 넣을 수 있는 것들을 알아온다. 그리고 영업 인재는 대기업 출신이 아닌, 동대문에서 하나 팔아본 사람을 뽑아라.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Wanted High Five 2026 · Makers Day · 2026. 05. 13</div>
+  <div class="footer-session">똑닥, BEP를 넘기다</div>
+  <div class="footer-sub" style="margin-top:6px;">김영석 · 비브로스 · 내부 공유용 세션 아카이브</div>
+</footer>
+
+</body>
+</html>

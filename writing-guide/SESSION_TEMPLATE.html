@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title><!-- [세션명] · AWS Summit Seoul 2026 --></title>
+<style>
+  /* ── DESIGN SYSTEM ─────────────────────────────────────────────────────── */
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap');
+
+  :root {
+    --bg-base:     #121212;
+    --bg-surface:  #181818;
+    --bg-elevated: #1f1f1f;
+    --bg-card:     #252525;
+
+    --green:    #1ed760;
+    --green-dim:#1db954;
+    --orange:   #ffa42b;   /* jenny.by */
+    --blue:     #539df5;   /* brad.and */
+    --pink:     #f3727f;   /* ayyan.jm */
+    --purple:   #b39ddb;   /* daniel.007 */
+    --teal:     #4ecdc4;   /* zero.002 */
+    --yellow:   #f5c842;
+    --red:      #f3727f;
+    --aws:      #FF9900;   /* AWS 오렌지 */
+
+    --text-primary:   #ffffff;
+    --text-secondary: #b3b3b3;
+    --text-muted:     #6a6a6a;
+    --border:         #2a2a2a;
+
+    --shadow-card: rgba(0,0,0,0.5) 0px 8px 24px;
+    --shadow-sm:   rgba(0,0,0,0.3) 0px 4px 8px;
+    --radius:      8px;
+    --radius-pill: 9999px;
+  }
+
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg-base); color: var(--text-primary);
+    font-family: 'Noto Sans KR','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+
+  /* ── NAV ──────────────────────────────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(18,18,18,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px; display: flex; align-items: center; gap: 8px;
+  }
+  .nav-back    { font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: color .2s; }
+  .nav-back:hover { color: var(--text-primary); }
+  .nav-sep     { color: #3a3a3a; font-size: 14px; }
+  .nav-current { font-size: 13px; color: var(--text-secondary); }
+  .nav-pill    {
+    margin-left: auto; background: var(--bg-elevated); color: var(--text-secondary);
+    font-size: 12px; font-weight: 600; padding: 5px 14px;
+    border-radius: var(--radius-pill); letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  /* ── HERO ─────────────────────────────────────────────────────────────── */
+  .hero {
+    position: relative; padding: 100px 0 80px;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden; min-height: 520px; background: #121212;
+  }
+  .hero-bg { position: absolute; inset: 0; z-index: 0; }
+  .hero-bg img {
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    height: calc(100% + 80px); width: auto; max-width: none;
+    filter: brightness(0.28) saturate(0.5);
+  }
+  .hero-bg::after {
+    content: ''; position: absolute; inset: 0;
+    background:
+      linear-gradient(to right, #121212 0%, #121212 30%, rgba(18,18,18,0.75) 55%, rgba(18,18,18,0.2) 100%),
+      linear-gradient(to bottom, rgba(18,18,18,0.2) 0%, transparent 30%, transparent 70%, #121212 100%);
+  }
+  .hero > .container { position: relative; z-index: 1; }
+  .hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+  .hero h1 {
+    font-size: clamp(26px, 4vw, 48px); font-weight: 700;
+    line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 16px;
+  }
+  .hero h1 .accent { color: var(--aws); }
+  .hero-desc { font-size: 15px; color: var(--text-secondary); max-width: 560px; line-height: 1.7; margin-bottom: 36px; }
+  .hero-meta-row { display: flex; flex-wrap: wrap; gap: 32px; }
+  .hero-meta-item .label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; }
+  .hero-meta-item .value { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-top: 2px; }
+
+  /* ── BADGES ───────────────────────────────────────────────────────────── */
+  .badge {
+    background: var(--aws); color: #000;
+    font-size: 11px; font-weight: 700; padding: 4px 12px;
+    border-radius: var(--radius-pill); letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .badge-outline {
+    background: rgba(255,255,255,0.08); color: var(--text-secondary);
+    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 11px; font-weight: 600; padding: 4px 12px;
+    border-radius: var(--radius-pill); letter-spacing: 0.08em;
+  }
+  .badge-attendee {
+    font-size: 11px; font-weight: 700; padding: 4px 12px;
+    border-radius: var(--radius-pill); letter-spacing: 0.06em;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .badge-attendee::before { content:''; display:inline-block; width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+  .badge-attendee.daniel { background: rgba(179,157,219,0.18); color: var(--purple); border: 1px solid rgba(179,157,219,0.4); }
+  .badge-attendee.daniel::before { background: var(--purple); }
+  .badge-attendee.zero   { background: rgba(78,205,196,0.18);  color: var(--teal);   border: 1px solid rgba(78,205,196,0.4); }
+  .badge-attendee.zero::before   { background: var(--teal); }
+
+  /* ── STATS STRIP ──────────────────────────────────────────────────────── */
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px; background: var(--border);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .stat-cell { background: var(--bg-base); padding: 28px 32px; display: flex; flex-direction: column; gap: 4px; }
+  .stat-cell .number { font-size: 30px; font-weight: 700; color: var(--aws); line-height: 1; }
+  .stat-cell .desc   { font-size: 12px; color: var(--text-secondary); }
+
+  /* ── SECTIONS ─────────────────────────────────────────────────────────── */
+  section { padding: 64px 0; }
+  .section-label { font-size: 11px; font-weight: 700; color: var(--aws); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px; }
+  .section-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .section-sub   { font-size: 14px; color: var(--text-secondary); margin-bottom: 40px; line-height: 1.7; }
+  .border-top    { border-top: 1px solid var(--border); }
+
+  /* ── PROBLEM CARDS (Before/After) ─────────────────────────────────────── */
+  .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+  .problem-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+  .problem-card.before { border-top: 3px solid var(--red); }
+  .problem-card.after  { border-top: 3px solid var(--green); }
+  .problem-card .tag   { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  .problem-card.before .tag { color: var(--red); }
+  .problem-card.after  .tag { color: var(--green); }
+  .problem-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .problem-card p  { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+
+  /* ── INSIGHT BOX ──────────────────────────────────────────────────────── */
+  .insight-box {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px 36px;
+    display: flex; gap: 48px; align-items: center; flex-wrap: wrap;
+  }
+  .insight-box .big-num   { font-size: 52px; font-weight: 700; color: var(--aws); line-height: 1; }
+  .insight-box .big-label { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+  .insight-box .divider   { width: 1px; background: var(--border); align-self: stretch; min-height: 60px; }
+  .insight-box .conclusion { font-size: 15px; font-weight: 600; line-height: 1.6; max-width: 420px; }
+  .insight-box .conclusion span { color: var(--aws); }
+
+  /* ── REACTION / QUOTE BOX ─────────────────────────────────────────────── */
+  .reaction-box {
+    background: var(--bg-surface); border-left: 3px solid var(--aws);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 24px 28px; margin: 24px 0;
+  }
+  .reaction-text { font-size: 18px; font-weight: 700; line-height: 1.4; margin-bottom: 8px; }
+  .reaction-sub  { font-size: 13px; color: var(--text-muted); }
+
+  /* ── NUMBERED LIST ────────────────────────────────────────────────────── */
+  .obstacle-list { display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
+  .obstacle-item { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; }
+  .obstacle-num  { font-size: 12px; font-weight: 700; color: var(--aws); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .obstacle-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+  /* ── INLINE SLIDE PHOTO ───────────────────────────────────────────────── */
+  .slide-inline     { margin: 24px 0; border-radius: var(--radius); overflow: hidden; background: var(--bg-surface); }
+  .slide-inline img { width: 100%; display: block; }
+  .slide-inline-cap { font-size: 12px; color: var(--text-muted); padding: 10px 16px; }
+
+  /* ── PHOTO GRID ───────────────────────────────────────────────────────── */
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin: 24px 0; }
+  .photo-item { border-radius: var(--radius); overflow: hidden; background: var(--bg-surface); }
+  .photo-item img { width: 100%; display: block; aspect-ratio: 4/3; object-fit: cover; }
+  .photo-item-cap { font-size: 12px; color: var(--text-muted); padding: 8px 12px; }
+
+  /* ── KEY TAKEAWAY CARD ────────────────────────────────────────────────── */
+  .takeaway-list { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+  .takeaway-item {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 16px 20px; font-size: 14px; line-height: 1.7;
+  }
+  .takeaway-item strong { color: var(--green); }
+
+  /* ── VIDEO WRAP ──────────────────────────────────────────────────────── */
+  /*
+   * 로컬 .mp4/.mov: <video src="./videos/파일명.mp4"> 상대경로 사용
+   * 외부 embed:     <iframe src="https://www.youtube.com/embed/VIDEO_ID">
+   * ❌ 절대경로(file:// 또는 C:\...) 금지  ❌ base64 금지
+   * ✅ ./videos/ 상대경로 또는 YouTube/Drive embed
+   */
+  .video-wrap {
+    border-radius: var(--radius); overflow: hidden;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    margin: 24px 0;
+  }
+  /* 로컬 video 태그 */
+  .video-wrap video { width: 100%; display: block; background: #000; }
+  /* iframe embed (16:9) */
+  .video-wrap.iframe-wrap { position: relative; padding-top: 56.25%; }
+  .video-wrap.iframe-wrap iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0;
+  }
+  .video-caption {
+    font-size: 12px; color: var(--text-muted);
+    padding: 10px 4px; margin-top: -16px; margin-bottom: 24px;
+  }
+
+  /* ── FOOTER ───────────────────────────────────────────────────────────── */
+  footer { padding: 48px 0; text-align: center; border-top: 1px solid var(--border); }
+  .footer-logo { font-size: 13px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .footer-note { font-size: 12px; color: var(--text-muted); }
+
+  /* ── RESPONSIVE ───────────────────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .container { padding: 0 20px; }
+    nav { padding: 14px 20px; }
+    .hero { padding: 80px 0 60px; min-height: 420px; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .insight-box  { flex-direction: column; gap: 24px; }
+    .hero-meta-row { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- [1] NAV — 경로는 GitHub Pages 상대경로 유지할 것                      -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<nav>
+  <a href="../../index.html" class="nav-back">← 아카이브</a>
+  <span class="nav-sep">/</span>
+  <a href="../index.html" class="nav-back">AWS Summit Seoul 2026</a>
+  <span class="nav-sep">/</span>
+  <span class="nav-current"><!-- 세션명 --></span>
+  <span class="nav-pill">2026.05.<!-- 20 또는 21 --></span>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- [2] HERO                                                               -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-bg">
+    <!--
+      이미지 삽입 방법 (둘 중 하나):
+      A) base64 embed: <img src="data:image/jpeg;base64,/9j/4AA..." alt="현장" />
+      B) GitHub 상대경로: <img src="../../assets/photos/20260520_세션명.jpg" alt="현장" />
+      ⚠️  로컬 절대경로(file:// 또는 C:\...)는 절대 사용 금지
+    -->
+    <img src="" alt="세션 현장" />
+  </div>
+  <div class="container">
+    <div class="hero-eyebrow">
+      <span class="badge">AWS</span>
+      <span class="badge-outline"><!-- 트랙명 (예: AI Innovation) --></span>
+      <!-- Day 1이면 daniel, Day 2이면 zero -->
+      <span class="badge-attendee daniel">daniel.007</span>
+      <!-- <span class="badge-attendee zero">zero.002</span> -->
+    </div>
+    <h1>
+      <!-- 세션 제목 --><br>
+      <span class="accent"><!-- 강조 키워드 --></span>
+    </h1>
+    <p class="hero-desc"><!-- 한 줄 요약 —— 핵심 메시지 --></p>
+    <div class="hero-meta-row">
+      <div class="hero-meta-item">
+        <div class="label">발표자</div>
+        <div class="value"><!-- 이름 · 소속 --></div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label">날짜</div>
+        <div class="value"><!-- 2026년 5월 20일 (Day 1) --></div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="label">트랙</div>
+        <div class="value"><!-- 트랙명 --></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- [3] STATS STRIP — 핵심 숫자 3~4개                                     -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="container">
+  <div class="stats-strip">
+    <div class="stat-cell">
+      <div class="number"><!-- 숫자 --></div>
+      <div class="desc"><!-- 설명 --></div>
+    </div>
+    <div class="stat-cell">
+      <div class="number"><!-- 숫자 --></div>
+      <div class="desc"><!-- 설명 --></div>
+    </div>
+    <div class="stat-cell">
+      <div class="number"><!-- 숫자 --></div>
+      <div class="desc"><!-- 설명 --></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- [4] SECTION 01 — 자유롭게 섹션 추가                                   -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="container">
+  <section>
+    <div class="section-label">OVERVIEW</div>
+    <h2 class="section-title"><!-- 섹션 제목 --></h2>
+    <p class="section-sub"><!-- 섹션 요약 --></p>
+
+    <!-- Before/After 비교 (옵션) -->
+    <div class="problem-grid">
+      <div class="problem-card before">
+        <div class="tag">기존</div>
+        <h3><!-- 기존 방식 --></h3>
+        <p><!-- 설명 --></p>
+      </div>
+      <div class="problem-card after">
+        <div class="tag">변화</div>
+        <h3><!-- 새로운 방식 --></h3>
+        <p><!-- 설명 --></p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- [4] SECTION 02 — 핵심 수치                                            -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="container">
+  <section class="border-top">
+    <div class="section-label">KEY NUMBERS</div>
+    <h2 class="section-title"><!-- 섹션 제목 --></h2>
+
+    <div class="insight-box">
+      <div>
+        <div class="big-num"><!-- 수치 --></div>
+        <div class="big-label"><!-- 지표 설명 --></div>
+      </div>
+      <div class="divider"></div>
+      <div class="conclusion">
+        <!-- 결론 텍스트 <span>핵심 키워드</span> -->
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- [4] SECTION 03 — 인용 / 슬라이드 사진                                 -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="container">
+  <section class="border-top">
+    <div class="section-label">INSIGHTS</div>
+    <h2 class="section-title"><!-- 섹션 제목 --></h2>
+
+    <!-- 인용 박스 -->
+    <div class="reaction-box">
+      <div class="reaction-text">"<!-- 인상적인 문구 -->"</div>
+      <div class="reaction-sub">— <!-- 발표자 / 컨텍스트 --></div>
+    </div>
+
+    <!-- 슬라이드 사진 -->
+    <div class="slide-inline">
+      <img src="" alt="슬라이드" loading="lazy" />
+      <div class="slide-inline-cap"><!-- 슬라이드 설명 --></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- [4] SECTION — 동영상 (있는 경우)                                      -->
+<!--   방법 A: 로컬 파일 → Claude Code가 videos/ 폴더에 복사               -->
+<!--     ✅ <video src="./videos/파일명.mp4">                               -->
+<!--   방법 B: 외부 embed → YouTube / Google Drive                         -->
+<!--     ✅ <iframe src="https://www.youtube.com/embed/VIDEO_ID">           -->
+<!--   ❌ 절대경로(file:// 또는 /Users/...) 절대 금지                       -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="container">
+  <section class="border-top">
+    <div class="section-label">VIDEO</div>
+    <h2 class="section-title"><!-- 동영상 제목 --></h2>
+    <p class="section-sub"><!-- 동영상 설명 --></p>
+
+    <!-- 방법 A: 로컬 파일 (Claude Code가 videos/ 에 복사, 100MB 미만) -->
+    <div class="video-wrap">
+      <video controls preload="metadata">
+        <source src="./videos/session-clip.mp4" type="video/mp4">
+        <source src="./videos/session-clip.mov" type="video/quicktime">
+        <p>이 브라우저는 동영상을 지원하지 않습니다.</p>
+      </video>
+    </div>
+    <div class="video-caption"><!-- 영상 설명 --></div>
+
+    <!-- 방법 B: YouTube embed — VIDEO_ID를 실제 ID로 교체
+    <div class="video-wrap iframe-wrap">
+      <iframe
+        src="https://www.youtube.com/embed/VIDEO_ID"
+        title="세션명"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+    -->
+
+    <!-- 방법 B: Google Drive embed — FILE_ID를 실제 ID로 교체
+    <div class="video-wrap iframe-wrap">
+      <iframe
+        src="https://drive.google.com/file/d/FILE_ID/preview"
+        title="세션명"
+        allow="autoplay"
+        allowfullscreen>
+      </iframe>
+    </div>
+    -->
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- [4] SECTION 04 — Key Takeaways                                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="container">
+  <section class="border-top">
+    <div class="section-label">TAKEAWAYS</div>
+    <h2 class="section-title"><!-- 핵심 인사이트 --></h2>
+
+    <div class="takeaway-list">
+      <div class="takeaway-item"><strong>포인트 1:</strong> <!-- 내용 --></div>
+      <div class="takeaway-item"><strong>포인트 2:</strong> <!-- 내용 --></div>
+      <div class="takeaway-item"><strong>포인트 3:</strong> <!-- 내용 --></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- [5] FOOTER                                                             -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">물류플랫폼팀 컨퍼런스 리뷰 아카이브</div>
+  <div class="footer-note">AWS Summit Seoul 2026 · <!-- 세션명 --> · 참석: <!-- daniel.007 / zero.002 --></div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Summit Seoul 2026 — 물류플랫폼팀 리뷰</title>
+<style>
+  :root {
+    --bg-base: #0d0d0d;
+    --bg-surface: #161616;
+    --bg-elevated: #1f1f1f;
+    --bg-card: #1a1a1a;
+    --green: #1ed760;
+    --blue: #539df5;
+    --orange: #ffa42b;
+    --aws: #FF9900;
+    --pink: #f3727f;
+    --purple: #b39ddb;
+    --teal: #4ecdc4;
+    --yellow: #f5c842;
+    --text-primary: #ffffff;
+    --text-secondary: #888;
+    --border: #252525;
+    --radius: 10px;
+    --radius-pill: 9999px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-base);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ─────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,13,13,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 48px;
+    display: flex; align-items: center; gap: 12px;
+    max-width: 100%;
+  }
+  .nav-back {
+    font-size: 13px; color: var(--text-secondary);
+    text-decoration: none;
+    transition: color .2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-back:hover { color: var(--text-primary); }
+  .nav-sep { color: var(--border); font-size: 16px; }
+  .nav-current { font-size: 13px; color: var(--text-secondary); }
+  .nav-pill {
+    margin-left: auto;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 4px 14px; font-size: 11px; color: var(--text-secondary);
+  }
+
+  /* ── HERO ─────────────────────────────── */
+  .hero {
+    background: linear-gradient(160deg, #1a1000 0%, #0d0d0d 60%);
+    border-bottom: 1px solid var(--border);
+    padding: 64px 48px 56px;
+    max-width: 1080px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -40px; right: -40px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(255,153,0,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--aws);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-title {
+    font-size: clamp(28px, 4.5vw, 48px);
+    font-weight: 900; line-height: 1.1; letter-spacing: -.02em;
+    margin-bottom: 12px;
+  }
+  .hero-title .accent { color: var(--aws); }
+  .hero-sub {
+    font-size: 15px; color: var(--text-secondary); max-width: 540px; line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .hero-meta-row {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+  }
+  .hero-meta-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 5px 14px; font-size: 12px; color: var(--text-secondary);
+  }
+  .hero-meta-chip .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--aws);
+  }
+  .attendee-chip {
+    padding: 4px 12px; border-radius: var(--radius-pill);
+    font-size: 11px; font-weight: 600;
+  }
+  .chip-daniel { background: rgba(179,157,219,.15); color: var(--purple); border: 1px solid rgba(179,157,219,.3); }
+  .chip-zero   { background: rgba(78,205,196,.15);  color: var(--teal);   border: 1px solid rgba(78,205,196,.3); }
+  .chip-jenny  { background: rgba(255,164,43,.15);  color: var(--orange); border: 1px solid rgba(255,164,43,.3); }
+  .chip-brad   { background: rgba(83,157,245,.15);  color: var(--blue);   border: 1px solid rgba(83,157,245,.3); }
+  .chip-ayyan  { background: rgba(243,114,127,.15); color: var(--pink);   border: 1px solid rgba(243,114,127,.3); }
+
+  /* ── MAIN ─────────────────────────────── */
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 48px 48px 96px;
+  }
+
+  /* ── SECTION LABEL ─────────────────────── */
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--text-secondary);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ── SCHEDULE GRID ─────────────────────── */
+  .schedule-section { margin-bottom: 52px; }
+  .day-tabs {
+    display: flex; gap: 4px; margin-bottom: 24px;
+    background: var(--bg-surface); border-radius: 10px;
+    padding: 4px; border: 1px solid var(--border);
+    width: fit-content;
+  }
+  .day-tab {
+    padding: 7px 20px; border-radius: 7px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: all .2s; color: var(--text-secondary);
+    border: none; background: transparent;
+  }
+  .day-tab.active {
+    background: var(--aws); color: #000;
+  }
+
+  .day-panel { display: none; }
+  .day-panel.active { display: block; }
+
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px;
+    width: 1px; background: var(--border);
+  }
+  .timeline-item {
+    position: relative; margin-bottom: 16px;
+    display: grid; grid-template-columns: 80px 1fr;
+    gap: 16px; align-items: start;
+  }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -23px; top: 6px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--border); border: 2px solid var(--bg-base);
+  }
+  .timeline-item.keynote::before { background: var(--aws); }
+  .timeline-item.workshop::before { background: var(--blue); }
+
+  .timeline-time {
+    font-size: 12px; color: var(--text-secondary); font-weight: 500;
+    padding-top: 2px; white-space: nowrap;
+  }
+  .timeline-content {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+  }
+  .timeline-content.keynote-block { border-color: rgba(255,153,0,.3); background: rgba(255,153,0,.05); }
+  .timeline-content.workshop-block { border-color: rgba(83,157,245,.2); background: rgba(83,157,245,.04); }
+
+  .tl-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .tl-sub   { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+  .tl-badge {
+    display: inline-flex; align-items: center;
+    padding: 2px 8px; border-radius: var(--radius-pill);
+    font-size: 10px; font-weight: 700; letter-spacing: .05em; margin-bottom: 6px;
+  }
+  .badge-keynote   { background: rgba(255,153,0,.15); color: var(--aws); }
+  .badge-session   { background: rgba(83,157,245,.12); color: var(--blue); }
+  .badge-workshop  { background: rgba(30,215,96,.12);  color: var(--green); }
+  .badge-expo      { background: rgba(179,157,219,.12); color: var(--purple); }
+
+  /* ── TRACK GRID ─────────────────────────── */
+  .tracks-section { margin-bottom: 52px; }
+  .track-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .track-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 18px;
+    transition: border-color .2s, transform .15s;
+    cursor: default;
+  }
+  .track-card:hover { border-color: #3a3a3a; transform: translateY(-1px); }
+  .track-icon { font-size: 20px; margin-bottom: 8px; }
+  .track-name { font-size: 13px; font-weight: 700; line-height: 1.4; margin-bottom: 4px; }
+  .track-day-label {
+    font-size: 10px; color: var(--text-secondary); font-weight: 500;
+  }
+  .track-card.day1 { border-top: 2px solid rgba(255,153,0,.4); }
+  .track-card.day2 { border-top: 2px solid rgba(83,157,245,.4); }
+
+  /* ── SESSION NOTES SECTION ─────────────── */
+  .sessions-section { margin-bottom: 52px; }
+  .empty-state {
+    background: var(--bg-card); border: 1px dashed #2a2a2a;
+    border-radius: 14px; padding: 48px 32px;
+    text-align: center;
+  }
+  .empty-icon { font-size: 36px; margin-bottom: 14px; opacity: .4; }
+  .empty-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text-secondary); }
+  .empty-desc  { font-size: 13px; color: #555; line-height: 1.6; }
+
+  .session-placeholder-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+  }
+  .session-ph-card {
+    background: var(--bg-card); border: 1px dashed #2a2a2a;
+    border-radius: 12px; padding: 22px 22px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .session-ph-header { display: flex; justify-content: space-between; align-items: flex-start; }
+  .session-ph-num { font-size: 11px; font-weight: 700; color: #444; letter-spacing: .08em; }
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: var(--radius-pill);
+    font-size: 10px; font-weight: 700;
+  }
+  .status-badge.wip  { background: rgba(255,164,43,.12); color: var(--orange); border: 1px solid rgba(255,164,43,.2); }
+  .status-badge.pending { background: rgba(136,136,136,.1); color: var(--text-secondary); border: 1px solid var(--border); }
+  .status-dot { width: 5px; height: 5px; border-radius: 50%; }
+  .status-dot.wip     { background: var(--orange); animation: pulse 1.5s infinite; }
+  .status-dot.pending { background: var(--text-secondary); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  .session-ph-title { font-size: 15px; font-weight: 700; line-height: 1.4; color: #555; }
+  .session-ph-track {
+    font-size: 11px; color: #444;
+    background: var(--bg-elevated); border-radius: var(--radius-pill);
+    padding: 3px 10px; width: fit-content;
+  }
+  .session-ph-note {
+    font-size: 12px; color: #3a3a3a; line-height: 1.5;
+    border-left: 2px solid #2a2a2a; padding-left: 10px; margin-top: 4px;
+  }
+
+  /* ── FOOTER ─────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 48px;
+    max-width: 1080px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--text-secondary); font-size: 12px;
+  }
+
+  /* ── RESPONSIVE ───────────────────────── */
+  @media (max-width: 768px) {
+    nav, .hero, main, footer { padding-left: 20px; padding-right: 20px; }
+    .hero { padding-top: 40px; padding-bottom: 36px; }
+    .track-grid { grid-template-columns: repeat(2, 1fr); }
+    .session-placeholder-grid { grid-template-columns: 1fr; }
+    .timeline-item { grid-template-columns: 64px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-back" href="../index.html">← 컨퍼런스 목록</a>
+  <span class="nav-sep">/</span>
+  <span class="nav-current">AWS Summit Seoul 2026</span>
+  <span class="nav-pill">2026.05.20–21</span>
+</nav>
+
+<!-- HERO -->
+<div style="max-width:1080px; margin:0 auto; border-bottom:1px solid var(--border);">
+<div class="hero">
+  <div class="hero-eyebrow">☁️ AWS Summit Seoul 2026</div>
+  <h1 class="hero-title">클라우드와 <span class="accent">AI</span>의<br>새로운 기준</h1>
+  <p class="hero-sub">
+    코엑스 컨벤션 센터 · 2026년 5월 20–21일<br>
+    Industry Day × AI Day — 18개 트랙, 100+ 브레이크아웃 세션
+  </p>
+  <div class="hero-meta-row">
+    <div class="hero-meta-chip"><span class="dot"></span>2026.05.20 – 21</div>
+    <div class="hero-meta-chip">📍 코엑스 컨벤션 센터</div>
+    <div class="hero-meta-chip">🎫 Industry Day + AI Day</div>
+    <span class="attendee-chip chip-daniel">daniel.007</span><span class="attendee-chip chip-zero">zero.002</span>
+  </div>
+</div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- 일정 개요 -->
+  <section class="schedule-section">
+    <div class="section-label">일정 개요</div>
+
+    <div class="day-tabs">
+      <button class="day-tab active" onclick="switchDay('day1', this)">Day 1 · 5/20 Industry Day</button>
+      <button class="day-tab" onclick="switchDay('day2', this)">Day 2 · 5/21 AI Day</button>
+    </div>
+
+    <!-- Day 1 -->
+    <div class="day-panel active" id="day1">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">08:30</div>
+          <div class="timeline-content">
+            <div class="tl-badge badge-expo">등록</div>
+            <div class="tl-title">등록 및 입장</div>
+            <div class="tl-sub">코엑스 컨벤션 센터 1F 로비</div>
+          </div>
+        </div>
+        <div class="timeline-item keynote">
+          <div class="timeline-time">09:30</div>
+          <div class="timeline-content keynote-block">
+            <div class="tl-badge badge-keynote">KEYNOTE</div>
+            <div class="tl-title">기조연설</div>
+            <div class="tl-sub">09:30 – 10:40 · 메인홀</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">10:00</div>
+          <div class="timeline-content">
+            <div class="tl-badge badge-expo">EXPO</div>
+            <div class="tl-title">엑스포 오픈</div>
+            <div class="tl-sub">10:00 – 17:30 · AWS 파트너·솔루션 부스</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">11:10</div>
+          <div class="timeline-content">
+            <div class="tl-badge badge-session">브레이크아웃</div>
+            <div class="tl-title">브레이크아웃 세션 시작</div>
+            <div class="tl-sub">11:10 – 16:50 · 9개 산업별 트랙<br>AI 시대의 리더십 / 리테일 / 금융 / SaaS / 제조 / 피지컬AI / 통신미디어 / 트래블 / 공공헬스케어</div>
+          </div>
+        </div>
+        <div class="timeline-item workshop">
+          <div class="timeline-time">11:10</div>
+          <div class="timeline-content workshop-block">
+            <div class="tl-badge badge-workshop">WORKSHOP</div>
+            <div class="tl-title">AI-DLC Challenge</div>
+            <div class="tl-sub">11:10 – 18:00 · E5홀<br>AI와 사람이 함께 만드는 새로운 개발 표준</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Day 2 -->
+    <div class="day-panel" id="day2">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">08:30</div>
+          <div class="timeline-content">
+            <div class="tl-badge badge-expo">등록</div>
+            <div class="tl-title">등록 및 입장</div>
+            <div class="tl-sub">코엑스 컨벤션 센터 1F 로비</div>
+          </div>
+        </div>
+        <div class="timeline-item keynote">
+          <div class="timeline-time">09:30</div>
+          <div class="timeline-content keynote-block">
+            <div class="tl-badge badge-keynote">KEYNOTE</div>
+            <div class="tl-title">기조연설</div>
+            <div class="tl-sub">09:30 – 10:40 · 메인홀</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">10:00</div>
+          <div class="timeline-content">
+            <div class="tl-badge badge-expo">EXPO</div>
+            <div class="tl-title">엑스포 오픈</div>
+            <div class="tl-sub">10:00 – 17:30</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">11:10</div>
+          <div class="timeline-content">
+            <div class="tl-badge badge-session">브레이크아웃</div>
+            <div class="tl-title">브레이크아웃 세션 시작</div>
+            <div class="tl-sub">11:10 – 16:50 · 9개 AI 중심 트랙<br>AI 모델 개발 / 데이터 기반 AI / 에이전트 구축 / 에이전트 전환 / AI 개발자 / AI 인프라 / AI 보안 / 비즈니스 혁신 / AWS 커뮤니티</div>
+          </div>
+        </div>
+        <div class="timeline-item workshop">
+          <div class="timeline-time">11:00</div>
+          <div class="timeline-content workshop-block">
+            <div class="tl-badge badge-workshop">WORKSHOP</div>
+            <div class="tl-title">AWS AI League</div>
+            <div class="tl-sub">11:00 – 16:00 · E5홀<br>Bedrock AgentCore 실습 핸즈온 · 우승자 re:Invent 2026 티켓 증정</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 트랙 구성 -->
+  <section class="tracks-section">
+    <div class="section-label">트랙 구성</div>
+    <div class="track-grid">
+      <!-- Day 1 -->
+      <div class="track-card day1">
+        <div class="track-icon">🏆</div>
+        <div class="track-name">AI 시대의 리더십</div>
+        <div class="track-day-label">Day 1 · Industry Day</div>
+      </div>
+      <div class="track-card day1">
+        <div class="track-icon">🛍️</div>
+        <div class="track-name">리테일 및 커머스</div>
+        <div class="track-day-label">Day 1 · Industry Day</div>
+      </div>
+      <div class="track-card day1">
+        <div class="track-icon">🏦</div>
+        <div class="track-name">금융 및 핀테크</div>
+        <div class="track-day-label">Day 1 · Industry Day</div>
+      </div>
+      <div class="track-card day1">
+        <div class="track-icon">⚙️</div>
+        <div class="track-name">SaaS 및 디지털 플랫폼</div>
+        <div class="track-day-label">Day 1 · Industry Day</div>
+      </div>
+      <div class="track-card day1">
+        <div class="track-icon">🏭</div>
+        <div class="track-name">제조 및 하이테크</div>
+        <div class="track-day-label">Day 1 · Industry Day</div>
+      </div>
+      <div class="track-card day1">
+        <div class="track-icon">🤖</div>
+        <div class="track-name">피지컬 AI</div>
+        <div class="track-day-label">Day 1 · Industry Day</div>
+      </div>
+      <div class="track-card day1">
+        <div class="track-icon">📡</div>
+        <div class="track-name">통신·미디어·게임</div>
+        <div class="track-day-label">Day 1 · Industry Day</div>
+      </div>
+      <div class="track-card day1">
+        <div class="track-icon">✈️</div>
+        <div class="track-name">트래블 및 호스피탈리티</div>
+        <div class="track-day-label">Day 1 · Industry Day</div>
+      </div>
+      <div class="track-card day1">
+        <div class="track-icon">🏥</div>
+        <div class="track-name">공공 및 헬스케어</div>
+        <div class="track-day-label">Day 1 · Industry Day</div>
+      </div>
+      <!-- Day 2 -->
+      <div class="track-card day2">
+        <div class="track-icon">🧠</div>
+        <div class="track-name">AI 모델 개발 및 관리형 AI</div>
+        <div class="track-day-label">Day 2 · AI Day</div>
+      </div>
+      <div class="track-card day2">
+        <div class="track-icon">📊</div>
+        <div class="track-name">데이터 기반 AI</div>
+        <div class="track-day-label">Day 2 · AI Day</div>
+      </div>
+      <div class="track-card day2">
+        <div class="track-icon">🔧</div>
+        <div class="track-name">에이전트 구축 도구</div>
+        <div class="track-day-label">Day 2 · AI Day</div>
+      </div>
+      <div class="track-card day2">
+        <div class="track-icon">🚀</div>
+        <div class="track-name">에이전트 실행 및 전환</div>
+        <div class="track-day-label">Day 2 · AI Day</div>
+      </div>
+      <div class="track-card day2">
+        <div class="track-icon">💻</div>
+        <div class="track-name">AI 시대 진화하는 개발자</div>
+        <div class="track-day-label">Day 2 · AI Day</div>
+      </div>
+      <div class="track-card day2">
+        <div class="track-icon">🖥️</div>
+        <div class="track-name">AI 인프라</div>
+        <div class="track-day-label">Day 2 · AI Day</div>
+      </div>
+      <div class="track-card day2">
+        <div class="track-icon">🔒</div>
+        <div class="track-name">AI 보안 및 거버넌스</div>
+        <div class="track-day-label">Day 2 · AI Day</div>
+      </div>
+      <div class="track-card day2">
+        <div class="track-icon">💡</div>
+        <div class="track-name">AI 기반 비즈니스 혁신</div>
+        <div class="track-day-label">Day 2 · AI Day</div>
+      </div>
+      <div class="track-card day2">
+        <div class="track-icon">👥</div>
+        <div class="track-name">AWS 커뮤니티</div>
+        <div class="track-day-label">Day 2 · AI Day</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 세션 노트 -->
+  <section class="sessions-section">
+    <div class="section-label">세션 리뷰</div>
+
+    <div class="session-placeholder-grid">
+      <div class="session-ph-card">
+        <div class="session-ph-header">
+          <span class="session-ph-num">SESSION 01</span>
+          <span class="status-badge wip"><span class="status-dot wip"></span>작성 중</span>
+        </div>
+        <div class="session-ph-title">세션 제목을 입력하세요</div>
+        <span class="session-ph-track">트랙 미정</span>
+        <div class="session-ph-note">리더의 노트 도착 후 내용을 채워주세요.</div>
+      </div>
+      <div class="session-ph-card">
+        <div class="session-ph-header">
+          <span class="session-ph-num">SESSION 02</span>
+          <span class="status-badge pending"><span class="status-dot pending"></span>예정</span>
+        </div>
+        <div class="session-ph-title">세션 제목을 입력하세요</div>
+        <span class="session-ph-track">트랙 미정</span>
+        <div class="session-ph-note">리더의 노트 도착 후 내용을 채워주세요.</div>
+      </div>
+      <div class="session-ph-card">
+        <div class="session-ph-header">
+          <span class="session-ph-num">SESSION 03</span>
+          <span class="status-badge pending"><span class="status-dot pending"></span>예정</span>
+        </div>
+        <div class="session-ph-title">세션 제목을 입력하세요</div>
+        <span class="session-ph-track">트랙 미정</span>
+        <div class="session-ph-note">리더의 노트 도착 후 내용을 채워주세요.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>물류플랫폼팀 컨퍼런스 리뷰 아카이브</span>
+  <span>AWS Summit Seoul 2026 · 2026.05.20</span>
+</footer>
+
+<script>
+function switchDay(dayId, btn) {
+  document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById(dayId).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>
