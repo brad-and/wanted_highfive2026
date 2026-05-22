@@ -4,12 +4,6 @@
 .AppleDouble
 .LSOverride
 
-# workfiles — 폴더 구조는 유지, 내부 파일은 push 금지
-workfiles/**
-!workfiles/
-!workfiles/*/
-!workfiles/*/.gitkeep
-
 # 편집기 임시 파일
 *.swp
 *.swo
